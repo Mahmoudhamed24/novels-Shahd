@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مكتبة الروايات - الصفحة الرئيسية</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><i class="fas fa-book-open"></i> مكتبة الروايات</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link active">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#categories" class="nav-link">التصنيفات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">عن الموقع</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin-login.html" class="nav-link admin-link">
+                            <i class="fas fa-user-shield"></i> إدارة
+                        </a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">اكتشف عالم الروايات</h1>
+            <p class="hero-subtitle">مكتبة شاملة للروايات العربية والمترجمة - اقرأ وحمل مجاناً</p>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="ابحث عن رواية، مؤلف، أو تصنيف...">
+                    <button class="search-btn" onclick="searchNovels()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="hero-background">
+            <div class="floating-books">
+                <i class="fas fa-book"></i>
+                <i class="fas fa-book-open"></i>
+                <i class="fas fa-bookmark"></i>
+                <i class="fas fa-feather-alt"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Novels Section -->
+    <section class="featured-novels">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-star"></i>
+                الروايات المميزة
+            </h2>
+            <div class="novels-grid" id="featuredNovels">
+                <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest Novels Section -->
+    <section class="latest-novels">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-clock"></i>
+                أحدث الإضافات
+            </h2>
+            <div class="novels-grid" id="latestNovels">
+                <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories" id="categories">
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-tags"></i>
+                التصنيفات
+            </h2>
+            <div class="categories-grid">
+                <div class="category-card" onclick="filterByCategory('رومانسي')">
+                    <i class="fas fa-heart"></i>
+                    <h3>رومانسي</h3>
+                    <span class="novel-count">0 رواية</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('خيال علمي')">
+                    <i class="fas fa-rocket"></i>
+                    <h3>خيال علمي</h3>
+                    <span class="novel-count">0 رواية</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('تاريخي')">
+                    <i class="fas fa-landmark"></i>
+                    <h3>تاريخي</h3>
+                    <span class="novel-count">0 رواية</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('غموض')">
+                    <i class="fas fa-search"></i>
+                    <h3>غموض</h3>
+                    <span class="novel-count">0 رواية</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('مغامرات')">
+                    <i class="fas fa-compass"></i>
+                    <h3>مغامرات</h3>
+                    <span class="novel-count">0 رواية</span>
+                </div>
+                <div class="category-card" onclick="filterByCategory('فانتازيا')">
+                    <i class="fas fa-magic"></i>
+                    <h3>فانتازيا</h3>
+                    <span class="novel-count">0 رواية</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    عن مكتبة الروايات
+                </h2>
+                <p>مكتبة الروايات هي منصة مجانية تهدف إلى نشر الثقافة والأدب العربي. نوفر مجموعة واسعة من الروايات العربية والمترجمة في مختلف التصنيفات، مع إمكانية القراءة المباشرة أو التحميل المجاني.</p>
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-book-reader"></i>
+                        <h3>قراءة مريحة</h3>
+                        <p>واجهة قراءة مصممة خصيصاً لتوفير تجربة قراءة مريحة</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-download"></i>
+                        <h3>تحميل مجاني</h3>
+                        <p>حمل الروايات بصيغ مختلفة واقرأها في أي وقت</p>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>متوافق مع الجوال</h3>
+                        <p>الموقع يعمل بشكل مثالي على جميع الأجهزة</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-book-open"></i> مكتبة الروايات</h3>
+                    <p>منصة مجانية لنشر وقراءة الروايات العربية والمترجمة</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="#categories">التصنيفات</a></li>
+                        <li><a href="#about">عن الموقع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>تواصل معنا</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 مكتبة الروايات. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/pdf-handler.js"></script>
+</body>
+</html>
+

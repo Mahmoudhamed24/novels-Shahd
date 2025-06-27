@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الرواية - مكتبة الروايات</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .novel-details {
+            padding: 6rem 0 4rem;
+            min-height: 100vh;
+        }
+        
+        .novel-header {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .novel-cover-large {
+            width: 100%;
+            height: 400px;
+            background: var(--gradient);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .novel-cover-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+        
+        .novel-meta {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .novel-title-large {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .novel-author-large {
+            font-size: 1.3rem;
+            color: var(--light-text);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .novel-category-large {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .novel-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+        }
+        
+        .stat-label {
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .novel-actions-large {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .novel-description-full {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .back-btn {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            z-index: 100;
+        }
+        
+        .back-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 768px) {
+            .novel-header {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .novel-cover-large {
+                max-width: 250px;
+                height: 350px;
+                margin: 0 auto;
+            }
+            
+            .novel-stats {
+                justify-content: center;
+            }
+            
+            .novel-actions-large {
+                justify-content: center;
+            }
+            
+            .back-btn {
+                top: 80px;
+                right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><i class="fas fa-book-open"></i> مكتبة الروايات</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#categories" class="nav-link">التصنيفات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#about" class="nav-link">عن الموقع</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin-login.html" class="nav-link admin-link">
+                            <i class="fas fa-user-shield"></i> إدارة
+                        </a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Back Button -->
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-right"></i>
+    </button>
+
+    <!-- Novel Details -->
+    <section class="novel-details">
+        <div class="container">
+            <div class="novel-header" id="novelHeader">
+                <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+            </div>
+            
+            <div class="novel-description-full">
+                <h3 class="section-header">
+                    <i class="fas fa-align-right"></i>
+                    وصف الرواية
+                </h3>
+                <p id="novelDescriptionFull">
+                    <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-book-open"></i> مكتبة الروايات</h3>
+                    <p>منصة مجانية لنشر وقراءة الروايات العربية والمترجمة</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="index.html#categories">التصنيفات</a></li>
+                        <li><a href="index.html#about">عن الموقع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>تواصل معنا</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 مكتبة الروايات. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/pdf-handler.js"></script>
+    <script>
+        // Load novel details when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNovelDetails();
+        });
+
+        function loadNovelDetails() {
+            const novelId = parseInt(localStorage.getItem('currentNovelId'));
+            if (!novelId) {
+                alert('لم يتم العثور على الرواية');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            loadNovels();
+            const novel = novels.find(n => n.id === novelId);
+            if (!novel) {
+                alert('الرواية غير موجودة');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            displayNovelDetails(novel);
+            
+            // Update view count
+            novel.views = (novel.views || 0) + 1;
+            saveNovels();
+        }
+
+        function displayNovelDetails(novel) {
+            const headerContainer = document.getElementById('novelHeader');
+            const descriptionContainer = document.getElementById('novelDescriptionFull');
+
+            headerContainer.innerHTML = `
+                <div class="novel-cover-large">
+                    ${novel.cover ? `<img src="${novel.cover}" alt="${novel.title}">` : '<i class="fas fa-book"></i>'}
+                </div>
+                <div class="novel-meta">
+                    <h1 class="novel-title-large">${novel.title}</h1>
+                    <p class="novel-author-large">
+                        <i class="fas fa-user"></i>
+                        ${novel.author}
+                    </p>
+                    <span class="novel-category-large">
+                        <i class="fas fa-tag"></i>
+                        ${novel.category}
+                    </span>
+                    <div class="novel-stats">
+                        <div class="stat">
+                            <div class="stat-number">${formatNumber(novel.views || 0)}</div>
+                            <div class="stat-label">مشاهدة</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${formatNumber(novel.downloads || 0)}</div>
+                            <div class="stat-label">تحميل</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">${formatDate(novel.publishDate)}</div>
+                            <div class="stat-label">تاريخ النشر</div>
+                        </div>
+                    </div>
+                    <div class="novel-actions-large">
+                        <button class="btn btn-primary" onclick="readNovel(${novel.id})">
+                            <i class="fas fa-book-open"></i>
+                            قراءة الرواية
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadNovel(${novel.id})">
+                            <i class="fas fa-download"></i>
+                            تحميل الرواية
+                        </button>
+                        <button class="btn btn-secondary" onclick="shareNovel(${novel.id})">
+                            <i class="fas fa-share"></i>
+                            مشاركة
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            descriptionContainer.textContent = novel.description;
+            
+            // Update page title
+            document.title = `${novel.title} - مكتبة الروايات`;
+        }
+
+        function goBack() {
+            if (document.referrer && document.referrer.includes(window.location.hostname)) {
+                window.history.back();
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function shareNovel(novelId) {
+            const novel = novels.find(n => n.id === novelId);
+            if (!novel) return;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: novel.title,
+                    text: novel.description,
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                const url = window.location.href;
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('تم نسخ رابط الرواية إلى الحافظة');
+                }).catch(() => {
+                    alert('لا يمكن نسخ الرابط');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نتائج البحث - مكتبة الروايات</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .search-page {
+            padding: 6rem 0 4rem;
+            min-height: 100vh;
+        }
+        
+        .search-header {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .search-title {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .search-info {
+            color: var(--light-text);
+            font-size: 1.1rem;
+        }
+        
+        .search-filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 80px;
+        }
+        
+        .filter-options {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--secondary-color);
+            color: white;
+            border-color: var(--secondary-color);
+        }
+        
+        .sort-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-family: 'Cairo', sans-serif;
+            background: white;
+        }
+        
+        .search-results {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        
+        .results-header {
+            background: var(--light-background);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .results-count {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .view-btn {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .view-btn.active {
+            background: var(--secondary-color);
+            color: white;
+        }
+        
+        .results-content {
+            padding: 2rem;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+        
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .novel-item-list {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .novel-item-list:hover {
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+        
+        .novel-cover-small {
+            width: 80px;
+            height: 120px;
+            background: var(--gradient);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        
+        .novel-cover-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--border-radius);
+        }
+        
+        .novel-details-list {
+            flex: 1;
+        }
+        
+        .novel-title-list {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .novel-meta-list {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        .novel-description-list {
+            color: var(--light-text);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--light-text);
+        }
+        
+        .no-results i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: var(--border-color);
+        }
+        
+        @media (max-width: 768px) {
+            .search-page {
+                padding: 6rem 0 2rem;
+            }
+            
+            .filter-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .results-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .novel-item-list {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .novel-cover-small {
+                align-self: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <h1><i class="fas fa-book-open"></i> مكتبة الروايات</h1>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">الرئيسية</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#categories" class="nav-link">التصنيفات</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html#about" class="nav-link">عن الموقع</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="admin-login.html" class="nav-link admin-link">
+                            <i class="fas fa-user-shield"></i> إدارة
+                        </a>
+                    </li>
+                </ul>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Search Page -->
+    <section class="search-page">
+        <div class="container">
+            <!-- Search Header -->
+            <div class="search-header">
+                <h1 class="search-title">نتائج البحث</h1>
+                <p class="search-info" id="searchInfo">
+                    <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+                </p>
+            </div>
+
+            <!-- Search Filters -->
+            <div class="search-filters">
+                <div class="filter-group">
+                    <span class="filter-label">التصنيف:</span>
+                    <div class="filter-options">
+                        <button class="filter-btn active" onclick="filterByCategory('all')">الكل</button>
+                        <button class="filter-btn" onclick="filterByCategory('رومانسي')">رومانسي</button>
+                        <button class="filter-btn" onclick="filterByCategory('خيال علمي')">خيال علمي</button>
+                        <button class="filter-btn" onclick="filterByCategory('تاريخي')">تاريخي</button>
+                        <button class="filter-btn" onclick="filterByCategory('غموض')">غموض</button>
+                        <button class="filter-btn" onclick="filterByCategory('مغامرات')">مغامرات</button>
+                        <button class="filter-btn" onclick="filterByCategory('فانتازيا')">فانتازيا</button>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <span class="filter-label">ترتيب حسب:</span>
+                    <select class="sort-select" onchange="sortResults(this.value)">
+                        <option value="relevance">الأكثر صلة</option>
+                        <option value="newest">الأحدث</option>
+                        <option value="oldest">الأقدم</option>
+                        <option value="title">العنوان</option>
+                        <option value="author">المؤلف</option>
+                        <option value="views">الأكثر مشاهدة</option>
+                        <option value="downloads">الأكثر تحميلاً</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Search Results -->
+            <div class="search-results">
+                <div class="results-header">
+                    <span class="results-count" id="resultsCount">
+                        <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+                    </span>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="changeView('grid')" title="عرض شبكي">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" onclick="changeView('list')" title="عرض قائمة">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="results-content">
+                    <div class="results-grid" id="resultsContainer">
+                        <!-- سيتم ملء هذا القسم بواسطة JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><i class="fas fa-book-open"></i> مكتبة الروايات</h3>
+                    <p>منصة مجانية لنشر وقراءة الروايات العربية والمترجمة</p>
+                </div>
+                <div class="footer-section">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="index.html#categories">التصنيفات</a></li>
+                        <li><a href="index.html#about">عن الموقع</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>تواصل معنا</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 مكتبة الروايات. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/pdf-handler.js"></script>
+    <script>
+        let searchResults = [];
+        let filteredResults = [];
+        let currentView = 'grid';
+        let currentFilter = 'all';
+        let currentSort = 'relevance';
+
+        // Load search results when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSearchResults();
+            initializeNavigation();
+        });
+
+        function loadSearchResults() {
+            const results = localStorage.getItem('searchResults');
+            const searchTerm = localStorage.getItem('searchTerm');
+            
+            if (!results) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            searchResults = JSON.parse(results);
+            filteredResults = [...searchResults];
+            
+            // Update search info
+            const searchInfo = document.getElementById('searchInfo');
+            searchInfo.textContent = `البحث عن: "${searchTerm}"`;
+            
+            // Update page title
+            document.title = `البحث عن: ${searchTerm} - مكتبة الروايات`;
+            
+            displayResults();
+        }
+
+        function displayResults() {
+            const container = document.getElementById('resultsContainer');
+            const resultsCount = document.getElementById('resultsCount');
+            
+            resultsCount.textContent = `${filteredResults.length} نتيجة`;
+            
+            if (filteredResults.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-search"></i>
+                        <h3>لا توجد نتائج</h3>
+                        <p>لم يتم العثور على روايات تطابق معايير البحث</p>
+                        <button class="btn btn-primary" onclick="window.location.href='index.html'">
+                            العودة للرئيسية
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (currentView === 'grid') {
+                container.className = 'results-grid';
+                container.innerHTML = filteredResults.map(novel => createNovelCard(novel)).join('');
+            } else {
+                container.className = 'results-list';
+                container.innerHTML = filteredResults.map(novel => createNovelListItem(novel)).join('');
+            }
+        }
+
+        function createNovelListItem(novel) {
+            return `
+                <div class="novel-item-list" onclick="viewNovel(${novel.id})">
+                    <div class="novel-cover-small">
+                        ${novel.cover ? `<img src="${novel.cover}" alt="${novel.title}">` : '<i class="fas fa-book"></i>'}
+                    </div>
+                    <div class="novel-details-list">
+                        <h3 class="novel-title-list">${novel.title}</h3>
+                        <div class="novel-meta-list">
+                            <span><i class="fas fa-user"></i> ${novel.author}</span>
+                            <span><i class="fas fa-tag"></i> ${novel.category}</span>
+                            <span><i class="fas fa-calendar"></i> ${formatDate(novel.publishDate)}</span>
+                            <span><i class="fas fa-eye"></i> ${formatNumber(novel.views || 0)}</span>
+                            <span><i class="fas fa-download"></i> ${formatNumber(novel.downloads || 0)}</span>
+                        </div>
+                        <p class="novel-description-list">${novel.description}</p>
+                        <div class="novel-actions">
+                            <button class="btn btn-primary" onclick="event.stopPropagation(); readNovel(${novel.id})">
+                                <i class="fas fa-book-open"></i>
+                                قراءة
+                            </button>
+                            <button class="btn btn-secondary" onclick="event.stopPropagation(); downloadNovel(${novel.id})">
+                                <i class="fas fa-download"></i>
+                                تحميل
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterByCategory(category) {
+            // Update active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentFilter = category;
+            
+            if (category === 'all') {
+                filteredResults = [...searchResults];
+            } else {
+                filteredResults = searchResults.filter(novel => novel.category === category);
+            }
+            
+            sortResults(currentSort);
+        }
+
+        function sortResults(sortBy) {
+            currentSort = sortBy;
+            
+            switch(sortBy) {
+                case 'newest':
+                    filteredResults.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+                    break;
+                case 'oldest':
+                    filteredResults.sort((a, b) => new Date(a.publishDate) - new Date(b.publishDate));
+                    break;
+                case 'title':
+                    filteredResults.sort((a, b) => a.title.localeCompare(b.title, 'ar'));
+                    break;
+                case 'author':
+                    filteredResults.sort((a, b) => a.author.localeCompare(b.author, 'ar'));
+                    break;
+                case 'views':
+                    filteredResults.sort((a, b) => (b.views || 0) - (a.views || 0));
+                    break;
+                case 'downloads':
+                    filteredResults.sort((a, b) => (b.downloads || 0) - (a.downloads || 0));
+                    break;
+                default: // relevance
+                    // Keep original search order
+                    break;
+            }
+            
+            displayResults();
+        }
+
+        function changeView(view) {
+            // Update active view button
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentView = view;
+            displayResults();
+        }
+    </script>
+</body>
+</html>
+

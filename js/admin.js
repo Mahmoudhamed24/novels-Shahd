@@ -225,8 +225,14 @@ function handleAddNovel(event) {
         return;
     }
     
-    if (!content && !pdfFile) {
-        alert('يرجى إدخال محتوى الرواية أو رفع ملف PDF');
+    if (!content || content.trim() === '') {
+        alert('يرجى إدخال نص الرواية كاملاً');
+        return;
+    }
+    
+    // Validate content length
+    if (content.length < 100) {
+        alert('نص الرواية قصير جداً. يرجى إدخال محتوى أكثر تفصيلاً');
         return;
     }
     
@@ -237,14 +243,14 @@ function handleAddNovel(event) {
         author,
         category,
         description,
-        content: content || 'محتوى الرواية متوفر في ملف PDF',
+        content: content, // Use the full content as entered
         featured: isFeatured,
         publishDate: editingNovelId ? novels.find(n => n.id === editingNovelId).publishDate : new Date().toISOString().split('T')[0],
         views: editingNovelId ? novels.find(n => n.id === editingNovelId).views : 0,
         downloads: editingNovelId ? novels.find(n => n.id === editingNovelId).downloads : 0,
         tags: [...currentTags],
         cover: '',
-        pdfFile: ''
+        pdfFile: pdfFile || null // Store PDF file if uploaded
     };
     
     // Handle file uploads (في التطبيق الحقيقي، يجب رفع الملفات إلى الخادم)
@@ -278,9 +284,78 @@ function saveNovelData(novelData) {
     
     saveNovels();
     resetNovelForm();
+    
+    // Force immediate update of all displays
+    updateAllDisplays();
+    
+    // Show success notification
+    showAdminNotification('تم حفظ الرواية بنجاح! ستظهر للمستخدمين فوراً', 'success');
+}
+
+// Update all displays immediately
+function updateAllDisplays() {
     updateStats();
     displayNovelsTable();
     updateCategoryCounts();
+    displayRecentNovels();
+    
+    // Trigger global data refresh
+    triggerGlobalDataRefresh();
+}
+
+// Trigger global data refresh for all users
+function triggerGlobalDataRefresh() {
+    // Update timestamp to notify all pages
+    localStorage.setItem('dataLastModified', Date.now().toString());
+    localStorage.setItem('forceRefresh', 'true');
+}
+
+// Show admin notification
+function showAdminNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = 'admin-notification';
+    
+    const colors = {
+        success: '#2ecc71',
+        error: '#e74c3c',
+        warning: '#f39c12',
+        info: '#3498db'
+    };
+    
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : type === 'warning' ? 'exclamation-triangle' : 'info-circle'}"></i>
+        ${message}
+    `;
+    
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${colors[type]};
+        color: white;
+        padding: 15px 25px;
+        border-radius: 8px;
+        z-index: 10000;
+        font-family: 'Cairo', sans-serif;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        animation: slideInRight 0.3s ease;
+        max-width: 400px;
+        word-wrap: break-word;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 5000);
 }
 
 // Reset novel form
@@ -418,10 +493,12 @@ function deleteNovel(novelId) {
     if (confirm(`هل أنت متأكد من حذف الرواية "${novel.title}"؟`)) {
         novels = novels.filter(n => n.id !== novelId);
         saveNovels();
-        displayNovelsTable();
-        updateStats();
-        updateCategoryCounts();
-        alert('تم حذف الرواية بنجاح');
+        
+        // Force immediate update of all displays
+        updateAllDisplays();
+        
+        // Show success notification
+        showAdminNotification(`تم حذف الرواية "${novel.title}" بنجاح! التحديث سيظهر للمستخدمين فوراً`, 'success');
     }
 }
 
@@ -502,10 +579,8 @@ function loadDetailedStats() {
 // Refresh data
 function refreshData() {
     loadNovels();
-    updateStats();
-    displayNovelsTable();
-    displayRecentNovels();
-    alert('تم تحديث البيانات بنجاح');
+    updateAllDisplays();
+    showAdminNotification('تم تحديث البيانات بنجاح', 'success');
 }
 
 // Logout function

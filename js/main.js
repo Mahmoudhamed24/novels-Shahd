@@ -142,6 +142,120 @@ function loadNovels() {
 // Save novels to localStorage
 function saveNovels() {
     localStorage.setItem('novels', JSON.stringify(novels));
+    // Trigger data change event for auto-refresh
+    triggerDataChange();
+}
+
+// Auto-refresh functionality
+let autoRefreshInterval;
+let lastDataHash = '';
+
+// Start automatic refresh
+function startAutoRefresh() {
+    // Calculate initial data hash
+    lastDataHash = calculateDataHash();
+    
+    // Check for data changes every 2 seconds
+    autoRefreshInterval = setInterval(() => {
+        checkForDataChanges();
+    }, 2000);
+}
+
+// Stop automatic refresh
+function stopAutoRefresh() {
+    if (autoRefreshInterval) {
+        clearInterval(autoRefreshInterval);
+    }
+}
+
+// Calculate hash of current data
+function calculateDataHash() {
+    const dataString = JSON.stringify(novels);
+    return btoa(dataString).length; // Simple hash using base64 length
+}
+
+// Check for data changes
+function checkForDataChanges() {
+    const currentHash = calculateDataHash();
+    if (currentHash !== lastDataHash) {
+        lastDataHash = currentHash;
+        refreshAllData();
+    }
+}
+
+// Refresh all data and update UI
+function refreshAllData() {
+    loadNovels(); // Reload from localStorage
+    
+    // Update all displays
+    if (typeof displayFeaturedNovels === 'function') displayFeaturedNovels();
+    if (typeof displayLatestNovels === 'function') displayLatestNovels();
+    if (typeof updateCategoryCounts === 'function') updateCategoryCounts();
+    if (typeof displayNovels === 'function') displayNovels();
+    
+    // Show notification
+    showAutoRefreshNotification();
+}
+
+// Trigger data change (called when data is modified)
+function triggerDataChange() {
+    // Update timestamp to trigger refresh on other pages
+    localStorage.setItem('dataLastModified', Date.now().toString());
+}
+
+// Show auto-refresh notification
+function showAutoRefreshNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'auto-refresh-notification';
+    notification.innerHTML = `
+        <i class="fas fa-sync-alt"></i>
+        تم تحديث البيانات تلقائياً
+    `;
+    
+    // Style the notification
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #2ecc71;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 10000;
+        font-family: 'Cairo', sans-serif;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remove notification after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }
+    }, 3000);
+}
+
+// Add CSS animations for notifications
+function addAutoRefreshStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
 }
 
 // Display featured novels
@@ -375,4 +489,33 @@ function hideLoading() {
         loading.remove();
     }
 }
+
+
+// Initialize auto-refresh when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Add auto-refresh styles
+    addAutoRefreshStyles();
+    
+    // Start auto-refresh after a short delay
+    setTimeout(() => {
+        startAutoRefresh();
+    }, 1000);
+});
+
+// Stop auto-refresh when page is about to unload
+window.addEventListener('beforeunload', function() {
+    stopAutoRefresh();
+});
+
+// Handle visibility change (when user switches tabs)
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        stopAutoRefresh();
+    } else {
+        // Restart auto-refresh when user returns to tab
+        setTimeout(() => {
+            startAutoRefresh();
+        }, 500);
+    }
+});
 

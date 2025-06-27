@@ -313,24 +313,53 @@
                 <p class="reading-author">بقلم: ${currentNovel.author}</p>
             `;
 
-            // For now, display the full content as one chapter
-            // In a real application, you would split content into chapters
-            contentContainer.innerHTML = `
-                <h2>الفصل الأول</h2>
-                <p>${currentNovel.description}</p>
-                <br>
-                <p>${currentNovel.content}</p>
-                <br>
-                <p>هذا نص تجريبي للرواية. في التطبيق الحقيقي، سيتم تقسيم المحتوى إلى فصول متعددة وعرضها بشكل منفصل. يمكن للمطور إضافة المزيد من المحتوى هنا وتقسيمه حسب الحاجة.</p>
-                <br>
-                <p>يمكن أيضاً إضافة ميزات أخرى مثل العلامات المرجعية، والملاحظات، والبحث داخل النص، وغيرها من الميزات التي تحسن تجربة القراءة.</p>
-            `;
+            // Display the full novel content instead of sample text
+            const novelContent = currentNovel.content || 'لا يوجد محتوى متاح لهذه الرواية';
+            contentContainer.innerHTML = formatNovelContent(novelContent);
             
             // Update page title
             document.title = `قراءة: ${currentNovel.title} - مكتبة الروايات`;
             
             // Apply saved preferences
             applySavedPreferences();
+        }
+
+        // Format novel content for better reading experience
+        function formatNovelContent(content) {
+            if (!content || content.trim() === '') {
+                return '<p class="no-content">لا يوجد محتوى متاح لهذه الرواية</p>';
+            }
+
+            // Split content into paragraphs and format
+            const lines = content.split('\n');
+            let formattedContent = '';
+            let chapterCount = 0;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line === '') {
+                    formattedContent += '<br>';
+                } else if (line.startsWith('الفصل') || line.startsWith('Chapter') || line.match(/^\d+\./)) {
+                    chapterCount++;
+                    formattedContent += `<h2 class="chapter-title">${line}</h2>`;
+                } else if (line.length > 100) {
+                    // Long lines are likely paragraphs
+                    formattedContent += `<p class="paragraph">${line}</p>`;
+                } else if (line.length > 20) {
+                    // Medium lines might be subheadings
+                    formattedContent += `<h3 class="subheading">${line}</h3>`;
+                } else {
+                    // Short lines
+                    formattedContent += `<p class="short-line">${line}</p>`;
+                }
+            });
+
+            // If no chapters were found, add a default chapter title
+            if (chapterCount === 0) {
+                formattedContent = '<h2 class="chapter-title">المحتوى</h2>' + formattedContent;
+            }
+
+            return formattedContent;
         }
 
         function changeFontSize(action) {

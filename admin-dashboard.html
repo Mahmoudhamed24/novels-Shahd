@@ -188,6 +188,40 @@
             resize: vertical;
         }
         
+        .content-textarea {
+            min-height: 300px !important;
+            font-family: 'Cairo', monospace;
+            line-height: 1.6;
+        }
+        
+        .content-input-container {
+            position: relative;
+        }
+        
+        .content-help {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+        }
+        
+        .content-help p {
+            margin: 0 0 0.5rem 0;
+            color: #495057;
+        }
+        
+        .content-help ul {
+            margin: 0;
+            padding-right: 1.5rem;
+        }
+        
+        .content-help li {
+            margin-bottom: 0.3rem;
+            color: #6c757d;
+        }
+        
         .file-upload {
             position: relative;
             display: inline-block;
@@ -555,8 +589,35 @@
                         </div>
                         
                         <div class="form-group full-width">
-                            <label class="form-label" for="novelContent">محتوى الرواية</label>
-                            <textarea id="novelContent" class="form-textarea" style="min-height: 200px;" placeholder="أدخل نص الرواية (اختياري إذا تم رفع ملف PDF)"></textarea>
+                            <label class="form-label" for="novelContent">نص الرواية كاملاً *</label>
+                            <div class="content-input-container">
+                                <textarea id="novelContent" class="form-textarea content-textarea" required 
+                                    placeholder="أدخل نص الرواية كاملاً هنا...
+
+يمكنك تنسيق النص كالتالي:
+- اكتب 'الفصل الأول' أو 'الفصل 1' لبداية فصل جديد
+- اترك سطراً فارغاً بين الفقرات
+- النص سيظهر في صفحة القراءة كما تكتبه هنا
+
+مثال:
+الفصل الأول
+
+في يوم من الأيام...
+
+الفصل الثاني
+
+وفي اليوم التالي..."></textarea>
+                                <div class="content-help">
+                                    <p><strong>نصائح لكتابة المحتوى:</strong></p>
+                                    <ul>
+                                        <li>اكتب النص كاملاً في هذا الحقل</li>
+                                        <li>استخدم "الفصل الأول" أو "الفصل 1" لتقسيم الفصول</li>
+                                        <li>اترك سطراً فارغاً بين الفقرات</li>
+                                        <li>النص سيظهر للقراء كما تكتبه هنا</li>
+                                        <li>يمكنك أيضاً رفع ملف PDF بدلاً من كتابة النص</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="form-group full-width">
